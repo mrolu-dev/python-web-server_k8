@@ -1,0 +1,4 @@
+apiVersion: v2
+name: webserver
+description: A Helm chart for deploying a Python web server with NGINX Ingress
+version: 0.1.0
