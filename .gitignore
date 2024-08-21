@@ -11,13 +11,3 @@ crash.log
 
 # Ignore plan files
 *.tfplan
-
-# Ignore override files (Terraform overrides)
-*.override.tf
-*.override.tf.json
-*_override.tf
-*_override.tf.json
-
-# Ignore CLI configuration files
-.terraformrc
-.terraformrc.json
