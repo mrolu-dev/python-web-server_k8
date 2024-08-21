@@ -10,4 +10,4 @@
 crash.log
 
 # Ignore plan files
-*.tfplan
+*.tfplanTerraform/.terraform/
