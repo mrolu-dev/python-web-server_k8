@@ -1,6 +1,6 @@
 # VPC and Subnets: Create the VPC, public and private subnets.
 resource "aws_vpc" "main_vpc" {
-  cidr_block = var.vpc_cidr
+  cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
@@ -9,11 +9,11 @@ resource "aws_vpc" "main_vpc" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  count             = length(var.public_subnet_cidrs)
-  vpc_id            = aws_vpc.main_vpc.id
-  cidr_block        = var.public_subnet_cidrs[count.index]
+  count                   = length(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.main_vpc.id
+  cidr_block              = var.public_subnet_cidrs[count.index]
   map_public_ip_on_launch = true
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
 
   tags = {
     Name = "public-subnet-${count.index}"
@@ -62,8 +62,8 @@ resource "aws_nat_gateway" "nat_gateways" {
 }
 
 resource "aws_eip" "nat_eip" {
-  count = length(aws_subnet.public_subnets)
-  vpc   = true
+  count  = length(aws_subnet.public_subnets)
+  domain = "vpc"  # Use domain instead of vpc
 }
 
 # Route Tables
@@ -128,22 +128,22 @@ resource "aws_rds_cluster" "rds_cluster" {
 }
 
 resource "aws_rds_cluster_instance" "rds_instances" {
-  count               = 2
-  identifier          = "rds-cluster-instance-${count.index + 1}"
-  cluster_identifier  = aws_rds_cluster.rds_cluster.id
-  instance_class      = "db.t3.medium"
-  engine              = aws_rds_cluster.rds_cluster.engine
-  engine_version      = aws_rds_cluster.rds_cluster.engine_version
-  publicly_accessible = false
+  count                = 2
+  identifier           = "rds-cluster-instance-${count.index + 1}"
+  cluster_identifier   = aws_rds_cluster.rds_cluster.id
+  instance_class       = "db.t3.medium"
+  engine               = aws_rds_cluster.rds_cluster.engine
+  engine_version       = aws_rds_cluster.rds_cluster.engine_version
+  publicly_accessible  = false
   db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
 }
 
 
 # Auto Scaling Group and Load Balancer:
 resource "aws_launch_configuration" "app_lc" {
-  name          = "app-launch-configuration"
-  image_id      = "ami-0c55b159cbfafe1f0" # Example AMI, replace with your own
-  instance_type = "t2.micro"
+  name            = "app-launch-configuration"
+  image_id        = "ami-0c55b159cbfafe1f0" # Example AMI, replace with your own
+  instance_type   = "t2.micro"
   security_groups = [aws_security_group.app_sg.id]
 
   lifecycle {
